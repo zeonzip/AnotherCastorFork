@@ -37,19 +37,29 @@ export async function loadCommandsFromDir(commandsDir)
 							const builder = commandData.options;
 
 							if (builder && typeof builder.setName === "function") 
+
 							{
-								if (exported.data.name) 
+								if (!exported.data.constraints) 
 								{
-									builder.setName(exported.data.name);
+									exported.data.constraints = {};
 								}
-								if (exported.data.description) 
+								if (exported.data.options)
 								{
-									builder.setDescription(exported.data.description);
+									if (exported.data.name) 
+									{
+										builder.setName(exported.data.name);
+									}
+									if (exported.data.description) 
+									{
+										builder.setDescription(exported.data.description);
+									}
+								
+
 								}
 							}
 
 							const finalJson = builder && builder.toJSON ? builder.toJSON() : commandData;
-                            
+
 							commands.push({ filePath: fullPath, module: mod, data: commandData });
 							commandsJson.push(finalJson);
 						}
