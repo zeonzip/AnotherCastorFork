@@ -1,4 +1,4 @@
-import { MessageFlags, SlashCommandBuilder } from "discord.js";
+import { SlashCommandBuilder } from "discord.js";
 import { pingComponent } from "../../../../plugins/msg/templates/components.js";
 import { Precondition } from "../../../../plugins/preconditions/precondition.js";
 import { Flags } from "../../../../plugins/flags/message.js";

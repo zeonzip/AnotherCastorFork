@@ -58,7 +58,10 @@ export async function execute(interaction)
 			return interaction.editReply({ content: "Missing required options." });
 		}
 
-		if (fontSize <= 0) fontSize = 72;
+		if (fontSize <= 0) 
+		{
+			fontSize = 72;
+		}
 
 		const url = "https://castor_webserver.guiki.pt/fun/caption";
 

@@ -58,7 +58,7 @@ export async function execute(interaction)
 
 		const randomMessage = messages[
 			getRandomNumber(0, messages.length - 1)
-			].replace("{{amount}}", amount);
+		].replace("{{amount}}", amount);
 
 		const time = Math.floor((Date.now() + 30000) / 1000);
 

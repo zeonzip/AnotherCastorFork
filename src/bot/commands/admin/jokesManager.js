@@ -190,7 +190,8 @@ export async function execute(interaction)
 							.setDisabled(true)
 					)
 				]
-			}).catch(() => {});
+			}).catch(() => 
+			{});
 		});
 
 		return;

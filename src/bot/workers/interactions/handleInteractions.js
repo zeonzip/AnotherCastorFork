@@ -21,8 +21,10 @@ function handleInteractionError(interaction)
 			flags: Flags.EPHEMERAL
 		});
 	}
-	catch
+	catch (err)
 	{
+		console.warn("Error when handling error with command: ", err);
+		return;
 	}
 }
 
@@ -35,7 +37,10 @@ export default async function handleInteractions({ client })
 	for (const c of commands)
 	{
 		const name = c.data.name ?? c.data.toJSON?.().name;
-		if (!name) continue;
+		if (!name) 
+		{
+			continue;
+		}
 		client.commands.set(name, c.module);
 	}
 
@@ -44,7 +49,10 @@ export default async function handleInteractions({ client })
 		if (interaction.isChatInputCommand())
 		{
 			const cmd = client.commands.get(interaction.commandName);
-			if (!cmd) return;
+			if (!cmd) 
+			{
+				return;
+			}
 
 			try
 			{
@@ -85,7 +93,10 @@ export default async function handleInteractions({ client })
 			try
 			{
 				const customId = interaction.customId;
-				if (!customId) return;
+				if (!customId) 
+				{
+					return;
+				}
 
 				if (customId.startsWith("ttt_"))
 				{
@@ -127,8 +138,14 @@ export default async function handleInteractions({ client })
 					{
 						const symbols = Array.from({ length: 9 }, (_, i) =>
 						{
-							if (game.challenger.positions.includes(String(i))) return "❌";
-							if (game.opponent.positions.includes(String(i))) return "⭕";
+							if (game.challenger.positions.includes(String(i))) 
+							{
+								return "❌";
+							}
+							if (game.opponent.positions.includes(String(i))) 
+							{
+								return "⭕";
+							}
 							return "⬜";
 						});
 						return `${symbols[ 0 ]} ${symbols[ 1 ]} ${symbols[ 2 ]}\n${symbols[ 3 ]} ${symbols[ 4 ]} ${symbols[ 5 ]}\n${symbols[ 6 ]} ${symbols[ 7 ]} ${symbols[ 8 ]}`;
@@ -258,7 +275,10 @@ export default async function handleInteractions({ client })
 
 					const choiceMap = { r: "rock", p: "paper", s: "scissors" };
 					const pick = choiceMap[ picked ];
-					if (!pick) return interaction.reply({ content: "Unknown choice.", flags: Flags.EPHEMERAL });
+					if (!pick) 
+					{
+						return interaction.reply({ content: "Unknown choice.", flags: Flags.EPHEMERAL });
+					}
 
 					if (isChallenger && game.challenger.choice)
 					{
@@ -369,18 +389,12 @@ export default async function handleInteractions({ client })
 			catch (err)
 			{
 				console.error("Error handling component interaction:", err);
-				try
+				if (!interaction.replied && !interaction.deferred)
 				{
-					if (!interaction.replied && !interaction.deferred)
-					{
-						await interaction.reply({
-							content: "Error handling button interaction.",
-							flags: Flags.EPHEMERAL
-						});
-					}
-				}
-				catch
-				{
+					await interaction.reply({
+						content: "Error handling button interaction.",
+						flags: Flags.EPHEMERAL
+					});
 				}
 			}
 		}

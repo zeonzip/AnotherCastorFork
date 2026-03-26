@@ -130,7 +130,10 @@ export async function execute(interaction)
 		return Precondition.result.denied(interaction);
 	}
 
-	if (!interaction.isMessageContextMenuCommand()) return;
+	if (!interaction.isMessageContextMenuCommand()) 
+	{
+		return;
+	}
 
 	const targetMessage = interaction.targetMessage;
 	const quoteText = targetMessage.content;
@@ -151,7 +154,8 @@ export async function execute(interaction)
 		{
 			interaction.editReply({
 				content: "Quote generation timed out after 12 seconds."
-			}).catch(() => {});
+			}).catch(() => 
+			{});
 		}
 	}, 12_000);
 
@@ -200,10 +204,14 @@ export async function execute(interaction)
 		console.error("Quote command error:", error);
 
 		let message = "Failed to create quote image.";
-		if (error.name === "AbortError") message = "Avatar download timed out.";
+		if (error.name === "AbortError") 
+		{
+			message = "Avatar download timed out.";
+		}
 		await interaction.editReply({
 			content: message, flags: Flags.EPHEMERAL
-		}).catch(() => {});
+		}).catch(() => 
+		{});
 	}
 	finally
 	{

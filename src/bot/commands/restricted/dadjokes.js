@@ -44,14 +44,16 @@ export async function execute(interaction)
 	}
 
 	const joke = getRandomJoke();
-	if (typeof joke === 'string') {
+	if (typeof joke === "string")
+	{
 		await interaction.reply({ content: joke, ephemeral: true });
 		return;
 	}
 	const setupText = joke.setup || joke.question;
 	const punchlineText = joke.punchline || joke.answer;
 
-	if (!setupText || !punchlineText) {
+	if (!setupText || !punchlineText)
+	{
 		console.error("Joke object is missing keys:", joke);
 		await interaction.reply({ content: "Error: This joke is formatted incorrectly in the database.", ephemeral: true });
 		return;
@@ -60,18 +62,20 @@ export async function execute(interaction)
 	await interaction.reply(`${setupText}`);
 	const filter = (m) => m.author.id === interaction.user.id;
 
-	try {
-		const collected = await interaction.channel.awaitMessages({
+	try
+	{
+		await interaction.channel.awaitMessages({
 			filter,
 			max: 1,
 			time: 30000,
-			errors: ['time']
+			errors: ["time"]
 		});
 
-		const userReply = collected.first();
 		await interaction.followUp(`**${punchlineText}**`);
 
-	} catch (error) {
+	}
+	catch 
+	{
 		await interaction.followUp(`Too slow! The answer was: **${punchlineText}**`);
 	}
 }

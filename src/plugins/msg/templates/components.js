@@ -2,23 +2,24 @@ import { SeparatorBuilder, SeparatorSpacingSize, TextDisplayBuilder } from "disc
 
 export function pingComponent(interaction)
 {
+	const components = [];
 	if (Math.round(interaction.client.ws.ping) == -1)
 	{
-		const pingFailedPreConComponent = [
+		components.push(
 			new TextDisplayBuilder().setContent("## Ping"),
 			new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
-			new TextDisplayBuilder().setContent(`\`\`\`\n[ WebSocket Latency ]   Unable to Determine\n\`\`\`\n-# *Ping could not be determined, this may be due to the command being ran too early.*`)
-		];
-		return pingFailedPreConComponent;
+			new TextDisplayBuilder().setContent("```\n[ WebSocket Latency ]   Unable to Determine\n```\n-# *Ping could not be determined, this may be due to the command being ran too early.*")
+		);
 	}
 
 	else
 	{
-		const pingComponent = [
+		components.push(
 			new TextDisplayBuilder().setContent("## Ping"),
 			new SeparatorBuilder().setSpacing(SeparatorSpacingSize.Small).setDivider(true),
 			new TextDisplayBuilder().setContent(`\`\`\`\n[ WebSocket Latency ]   ${Math.round(interaction.client.ws.ping)}\n\`\`\``)
-		];
-		return pingComponent;
+		);
 	}
+
+	return components;
 }

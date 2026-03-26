@@ -51,7 +51,7 @@ export async function execute(interaction)
 		interaction.reply({
 			embeds: [
 				basicEmbed({
-					author: { name: `🎰 Slots` },
+					author: { name: "🎰 Slots" },
 					description: slots
 						.map((s) => s.map((i) => slotItems[ i ]).join(" "))
 						.join("\n")
@@ -64,7 +64,7 @@ export async function execute(interaction)
 		interaction.reply({
 			embeds: [
 				basicEmbed({
-					author: { name: `🎰 Slots` },
+					author: { name: "🎰 Slots" },
 					description: slots
 						.map((s) => s.map((i) => slotItems[ i ]).join(" "))
 						.join("\n"),

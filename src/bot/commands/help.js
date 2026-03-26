@@ -19,10 +19,10 @@ export const data = new SlashCommandBuilder()
 
 export async function execute(interaction)
 {
-	const page = interaction.options.getString("page") || "info";
+//	const page = interaction.options.getString("page") || "info";
 
 	interaction.reply({
-		content: `-# coming soon? Is it really??`,
+		content: "-# coming soon? Is it really??",
 		flags: Flags.EPHEMERAL
 	});
 }

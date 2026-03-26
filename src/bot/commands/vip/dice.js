@@ -26,12 +26,12 @@ export async function execute(interaction)
 	const result =
 		guess === n
 			? {
-				author: { name: `🎲 Dice` },
+				author: { name: "🎲 Dice" },
 				color: 0x00ff00,
 				description: `You guessed **${guess}** and the dice rolled **${n}**. You win!`
 			}
 			: {
-				author: { name: `🎲 Dice` },
+				author: { name: "🎲 Dice" },
 				color: 0xff0000,
 				description: `You guessed **${guess}** and the dice rolled **${n}**. You lose!`
 			};

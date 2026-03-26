@@ -1,74 +1,74 @@
-import { customAlphabet } from 'nanoid';
-import createButtons from '../ui/buttons.js';
+import { customAlphabet } from "nanoid";
+import createButtons from "../ui/buttons.js";
 
-const nanoid = customAlphabet('1234567890abcdef', 10);
+const nanoid = customAlphabet("1234567890abcdef", 10);
 
 export const getTicTacToeButtons = (filledSlots, uniqueId) => [
 	createButtons([
 		{
 			custom_id: `ttt_0_${uniqueId}`,
-			label: '1',
+			label: "1",
 			style: 1,
-			disabled: filledSlots.includes('0'),
+			disabled: filledSlots.includes("0"),
 		},
 		{
 			custom_id: `ttt_1_${uniqueId}`,
-			label: '2',
+			label: "2",
 			style: 1,
-			disabled: filledSlots.includes('1'),
+			disabled: filledSlots.includes("1"),
 		},
 		{
 			custom_id: `ttt_2_${uniqueId}`,
-			label: '3',
+			label: "3",
 			style: 1,
-			disabled: filledSlots.includes('2'),
+			disabled: filledSlots.includes("2"),
 		},
 	]),
 	createButtons([
 		{
 			custom_id: `ttt_3_${uniqueId}`,
-			label: '4',
+			label: "4",
 			style: 1,
-			disabled: filledSlots.includes('3'),
+			disabled: filledSlots.includes("3"),
 		},
 		{
 			custom_id: `ttt_4_${uniqueId}`,
-			label: '5',
+			label: "5",
 			style: 1,
-			disabled: filledSlots.includes('4'),
+			disabled: filledSlots.includes("4"),
 		},
 		{
 			custom_id: `ttt_5_${uniqueId}`,
-			label: '6',
+			label: "6",
 			style: 1,
-			disabled: filledSlots.includes('5'),
+			disabled: filledSlots.includes("5"),
 		},
 	]),
 	createButtons([
 		{
 			custom_id: `ttt_6_${uniqueId}`,
-			label: '7',
+			label: "7",
 			style: 1,
-			disabled: filledSlots.includes('6'),
+			disabled: filledSlots.includes("6"),
 		},
 		{
 			custom_id: `ttt_7_${uniqueId}`,
-			label: '8',
+			label: "8",
 			style: 1,
-			disabled: filledSlots.includes('7'),
+			disabled: filledSlots.includes("7"),
 		},
 		{
 			custom_id: `ttt_8_${uniqueId}`,
-			label: '9',
+			label: "9",
 			style: 1,
-			disabled: filledSlots.includes('8'),
+			disabled: filledSlots.includes("8"),
 		},
 	]),
 ];
 
 export const getUniqueTicTacToeId = (client) =>
 {
-	const rpsGames = client.games.get('tictactoe') || {};
+	const rpsGames = client.games.get("tictactoe") || {};
 	let uniqueId = nanoid();
 	while (rpsGames[ uniqueId ])
 	{
@@ -86,8 +86,8 @@ export const addTicTacToeGameData = (
 	isBot = false
 ) =>
 {
-	client.games.set('tictactoe', {
-		...client.games.get('tictactoe'),
+	client.games.set("tictactoe", {
+		...client.games.get("tictactoe"),
 		[ uniqueId ]: {
 			challenger: { userId, positions: [] },
 			opponent: { userId: opponentId, positions: [] },

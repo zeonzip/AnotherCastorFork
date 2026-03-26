@@ -2,16 +2,16 @@ import UserSchema from "./schemas/user.js";
 
 export const fetchOrCreateUser = async (userId) =>
 {
-	const user = await UserSchema.findOne({ userId }).lean();
+	let user = await UserSchema.findOne({ userId }).lean();
 
 	if (user)
 	{
 		return user;
 	}
 
-	const newUser = new UserSchema({ userId });
-	await newUser.save();
-	return newUser;
+	user = new UserSchema({ userId });
+	await user.save();
+	return user;
 };
 
 export const updateUser = (userId, data) =>

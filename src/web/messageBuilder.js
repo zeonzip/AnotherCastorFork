@@ -107,7 +107,7 @@ export function buildMessagesFromDiscord(messageData)
 {
 	const avatar = messageData.author?.avatarURL
 		? messageData.author.avatarURL
-		: `https://cdn.discordapp.com/embed/avatars/0.png`;
+		: "https://cdn.discordapp.com/embed/avatars/0.png";
 
 	const msg = createSimpleMessage(
 		messageData.author?.username || "Unknown User",
@@ -172,7 +172,10 @@ export function buildMessagesFromDiscord(messageData)
 	{
 		messageData.components.forEach((row) =>
 		{
-			if (row.type !== 1) return;
+			if (row.type !== 1) 
+			{
+				return;
+			}
 			msg.components.push({
 				type: 1,
 				components: row.components.map((c) => ({

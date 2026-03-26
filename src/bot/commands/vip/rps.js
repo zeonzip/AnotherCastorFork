@@ -61,7 +61,7 @@ export async function execute(interaction)
 	}
 
 	const msg = isAgainstBot
-		? `You've challenged **me** to rock-paper-scissors! 😏\n\nMake your choice, I'm ready to crush you.`
+		? "You've challenged **me** to rock-paper-scissors! 😏\n\nMake your choice, I'm ready to crush you."
 		: `<@${interaction.user.id}> has challenged <@${opponentId}> to rock-paper-scissors!\n\nWaiting for both players to make their move.`;
 
 	const uniqueId = getUniqueRpsId(client);
