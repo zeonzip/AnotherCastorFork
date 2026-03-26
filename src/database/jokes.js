@@ -62,7 +62,10 @@ function saveJokes()
 
 export function addJoke(newJoke)
 {
-	if (!newJoke || typeof newJoke !== 'object') return false;
+	if (!newJoke || typeof newJoke !== "object") 
+	{
+		return false;
+	}
 	jokes.push({
 		setup: newJoke.setup.trim(),
 		punchline: newJoke.punchline.trim()
@@ -85,7 +88,10 @@ export function removeJoke(indexOrText)
 		jokes = jokes.filter(j => j.setup !== indexOrText);
 		removed = jokes.length < before;
 	}
-	if (removed) saveJokes();
+	if (removed) 
+	{
+		saveJokes();
+	}
 	return removed;
 }
 

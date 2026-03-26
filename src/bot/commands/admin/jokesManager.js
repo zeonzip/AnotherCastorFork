@@ -4,200 +4,214 @@ import {
 	ButtonStyle,
 	ComponentType,
 	EmbedBuilder,
-	SlashCommandBuilder
+	SlashCommandBuilder,
 } from "discord.js";
-import { Precondition } from "../../../plugins/preconditions/precondition.js";
+import { Precondition } from "../../../common/preconditions/precondition.js";
 import { addJoke, jokes, removeJoke } from "../../../database/jokes.js";
-import { Flags } from "../../../plugins/flags/message.js";
+import { Flags } from "../../../common/flags/message.js";
+import { Category } from "../../../common/command/enums.js";
 
-export const data = new SlashCommandBuilder()
-	.setName("managejokes")
-	.setDescription("Manage the dad-joke collection")
-	.addSubcommand(subcommand =>
-		subcommand
-			.setName("add")
-			.setDescription("Add a new joke to the collection")
-			.addStringOption(option =>
-				option.setName("setup")
-					.setDescription("The setup (e.g., Why did the chicken cross the road?)")
-					.setRequired(true)
-			)
-			.addStringOption(option =>
-				option.setName("punchline")
-					.setDescription("The punchline (e.g., To get to the other side!)")
-					.setRequired(true)
-			)
-	)
-	.addSubcommand(subcommand =>
-		subcommand
-			.setName("remove")
-			.setDescription("Remove a joke by its index")
-			.addIntegerOption(option =>
-				option
-					.setName("index")
-					.setDescription("0-based index of the joke to remove (use /joke list first)")
-					.setRequired(true)
-					.setMinValue(0)
-			)
-	)
-	.addSubcommand(subcommand =>
-		subcommand
-			.setName("list")
-			.setDescription("Show all current jokes in the collection")
-	);
-
-export async function execute(interaction)
-{
-	if (!Precondition.check.isSrMod(interaction))
+export const data = {
+	name: "managejokes",
+	description: "Manage the dad-joke collection",
+	category: Category.ADMIN,
+	options: new SlashCommandBuilder()
+		.addSubcommand((subcommand) =>
+			subcommand
+				.setName("add")
+				.setDescription("Add a new joke to the collection")
+				.addStringOption((option) =>
+					option
+						.setName("setup")
+						.setDescription(
+							"The setup (e.g., Why did the chicken cross the road?)",
+						)
+						.setRequired(true),
+				)
+				.addStringOption((option) =>
+					option
+						.setName("punchline")
+						.setDescription("The punchline (e.g., To get to the other side!)")
+						.setRequired(true),
+				),
+		)
+		.addSubcommand((subcommand) =>
+			subcommand
+				.setName("remove")
+				.setDescription("Remove a joke by its index")
+				.addIntegerOption((option) =>
+					option
+						.setName("index")
+						.setDescription(
+							"0-based index of the joke to remove (use /joke list first)",
+						)
+						.setRequired(true)
+						.setMinValue(0),
+				),
+		)
+		.addSubcommand((subcommand) =>
+			subcommand
+				.setName("list")
+				.setDescription("Show all current jokes in the collection"),
+		),
+	async execute(interaction) 
 	{
-		return Precondition.result.denied(interaction);
-	}
-
-	const subcommand = interaction.options.getSubcommand();
-
-	if (subcommand === "add")
-	{
-		const setup = interaction.options.getString("setup", true).trim();
-		const punchline = interaction.options.getString("punchline", true).trim();
-		addJoke({ setup, punchline });
-		return interaction.reply({
-			content: `Joke added! (total now: ${jokes.length})\n**Setup:** ${setup}\n**Punchline:** ${punchline}`,
-			flags: Flags.EPHEMERAL
-		});
-	}
-
-	if (subcommand === "remove")
-	{
-		const index = interaction.options.getInteger("index", true);
-
-		if (index < 0 || index >= jokes.length)
+		if (!Precondition.check.isSrMod(interaction)) 
 		{
+			return Precondition.result.denied(interaction);
+		}
+
+		const subcommand = interaction.options.getSubcommand();
+
+		if (subcommand === "add") 
+		{
+			const setup = interaction.options.getString("setup", true).trim();
+			const punchline = interaction.options.getString("punchline", true).trim();
+			addJoke({ setup, punchline });
 			return interaction.reply({
-				content: `❌ Invalid index. Use \`/managejokes list\` to see valid numbers (0 to ${jokes.length - 1}).`,
-				flags: Flags.EPHEMERAL
+				content: `Joke added! (total now: ${jokes.length})\n**Setup:** ${setup}\n**Punchline:** ${punchline}`,
+				flags: Flags.EPHEMERAL,
 			});
 		}
 
-		const removed = jokes[ index ];
-		removeJoke(index);
-
-
-		return interaction.reply({
-			content: `Removed joke #${index}:\n> ${removed.setup}\n> ||${removed.punchline}||\n(total now: ${jokes.length})`,
-			flags: Flags.EPHEMERAL
-		});
-	}
-	if (subcommand === "list")
-	{
-		if (jokes.length === 0)
+		if (subcommand === "remove") 
 		{
+			const index = interaction.options.getInteger("index", true);
+
+			if (index < 0 || index >= jokes.length) 
+			{
+				return interaction.reply({
+					content: `❌ Invalid index. Use \`/managejokes list\` to see valid numbers (0 to ${jokes.length - 1}).`,
+					flags: Flags.EPHEMERAL,
+				});
+			}
+
+			const removed = jokes[index];
+			removeJoke(index);
+
 			return interaction.reply({
-				content: "😢 The joke list is currently empty.",
-				flags: Flags.EPHEMERAL
+				content: `Removed joke #${index}:\n> ${removed.setup}\n> ||${removed.punchline}||\n(total now: ${jokes.length})`,
+				flags: Flags.EPHEMERAL,
 			});
 		}
-
-		const itemsPerPage = 5;
-		const totalPages = Math.ceil(jokes.length / itemsPerPage);
-		let currentPage = 0;
-
-		const generateEmbed = (page) =>
+		if (subcommand === "list") 
 		{
-			const start = page * itemsPerPage;
-			const end = start + itemsPerPage;
-			const pageItems = jokes.slice(start, end);
+			if (jokes.length === 0) 
+			{
+				return interaction.reply({
+					content: "😢 The joke list is currently empty.",
+					flags: Flags.EPHEMERAL,
+				});
+			}
 
-			const embed = new EmbedBuilder()
-				.setColor(0xfee75c)
-				.setTitle(`Dad Jokes Collection  (Page ${page + 1}/${totalPages})`)
-				.setDescription(`Total: **${jokes.length}** jokes`)
-				.setFooter({
-					text: "Index starts at 0 • Use /managejokes remove <index>"
+			const itemsPerPage = 5;
+			const totalPages = Math.ceil(jokes.length / itemsPerPage);
+			let currentPage = 0;
+
+			const generateEmbed = (page) => 
+			{
+				const start = page * itemsPerPage;
+				const end = start + itemsPerPage;
+				const pageItems = jokes.slice(start, end);
+
+				const embed = new EmbedBuilder()
+					.setColor(0xfee75c)
+					.setTitle(`Dad Jokes Collection  (Page ${page + 1}/${totalPages})`)
+					.setDescription(`Total: **${jokes.length}** jokes`)
+					.setFooter({
+						text: "Index starts at 0 • Use /managejokes remove <index>",
+					});
+
+				const descriptionLines = pageItems.map((joke, idx) => 
+				{
+					const globalIndex = start + idx;
+					return `**${globalIndex}.** ${joke.setup}\n   *${joke.punchline}*`;
 				});
 
-			const descriptionLines = pageItems.map((joke, idx) =>
+				embed.setDescription(descriptionLines.join("\n") || "(empty page?)");
+
+				return embed;
+			};
+
+			const createButtons = (page) => 
 			{
-				const globalIndex = start + idx;
-				return `**${globalIndex}.** ${joke.setup}\n   *${joke.punchline}*`;
+				return new ActionRowBuilder().addComponents(
+					new ButtonBuilder()
+						.setCustomId("prev")
+						.setLabel("◀")
+						.setStyle(ButtonStyle.Secondary)
+						.setDisabled(page === 0),
+					new ButtonBuilder()
+						.setCustomId("next")
+						.setLabel("▶")
+						.setStyle(ButtonStyle.Secondary)
+						.setDisabled(page === totalPages - 1),
+				);
+			};
+
+			await interaction.reply({
+				embeds: [generateEmbed(currentPage)],
+				components: [createButtons(currentPage)],
+				flags: Flags.EPHEMERAL,
 			});
 
-			embed.setDescription(descriptionLines.join("\n") || "(empty page?)");
+			const message = await interaction.fetchReply();
 
-			return embed;
-		};
-
-		const createButtons = (page) =>
-		{
-			return new ActionRowBuilder().addComponents(
-				new ButtonBuilder()
-					.setCustomId("prev")
-					.setLabel("◀")
-					.setStyle(ButtonStyle.Secondary)
-					.setDisabled(page === 0),
-				new ButtonBuilder()
-					.setCustomId("next")
-					.setLabel("▶")
-					.setStyle(ButtonStyle.Secondary)
-					.setDisabled(page === totalPages - 1)
-			);
-		};
-
-		await interaction.reply({
-			embeds: [ generateEmbed(currentPage) ],
-			components: [ createButtons(currentPage) ],
-			flags: Flags.EPHEMERAL
-		});
-
-		const message = await interaction.fetchReply();
-
-		const collector = message.createMessageComponentCollector({
-			filter: i => i.user.id === interaction.user.id,
-			time: 5 * 60 * 1000, // 5 minutes
-			componentType: ComponentType.Button
-		});
-
-		collector.on("collect", async (buttonInteraction) =>
-		{
-			if (buttonInteraction.customId === "prev" && currentPage > 0)
-			{
-				currentPage--;
-			}
-			else if (buttonInteraction.customId === "next" && currentPage < totalPages - 1)
-			{
-				currentPage++;
-			}
-
-			await buttonInteraction.update({
-				embeds: [ generateEmbed(currentPage) ],
-				components: [ createButtons(currentPage) ]
+			const collector = message.createMessageComponentCollector({
+				filter: (i) => i.user.id === interaction.user.id,
+				time: 5 * 60 * 1000, // 5 minutes
+				componentType: ComponentType.Button,
 			});
+
+			collector.on("collect", async (buttonInteraction) => 
+			{
+				if (buttonInteraction.customId === "prev" && currentPage > 0) 
+				{
+					currentPage--;
+				}
+				else if (
+					buttonInteraction.customId === "next" &&
+          currentPage < totalPages - 1
+				) 
+				{
+					currentPage++;
+				}
+
+				await buttonInteraction.update({
+					embeds: [generateEmbed(currentPage)],
+					components: [createButtons(currentPage)],
+				});
+			});
+
+			collector.on("end", async () => 
+			{
+				await interaction
+					.editReply({
+						components: [
+							new ActionRowBuilder().addComponents(
+								new ButtonBuilder()
+									.setCustomId("prev")
+									.setLabel("◀ Prev")
+									.setStyle(ButtonStyle.Secondary)
+									.setDisabled(true),
+								new ButtonBuilder()
+									.setCustomId("next")
+									.setLabel("Next ▶")
+									.setStyle(ButtonStyle.Secondary)
+									.setDisabled(true),
+							),
+						],
+					})
+					.catch(() => 
+					{});
+			});
+
+			return;
+		}
+
+		return interaction.reply({
+			content: "Unknown subcommand.",
+			flags: Flags.EPHEMERAL,
 		});
-
-		collector.on("end", async () =>
-		{
-			await interaction.editReply({
-				components: [
-					new ActionRowBuilder().addComponents(
-						new ButtonBuilder()
-							.setCustomId("prev")
-							.setLabel("◀ Prev")
-							.setStyle(ButtonStyle.Secondary)
-							.setDisabled(true),
-						new ButtonBuilder()
-							.setCustomId("next")
-							.setLabel("Next ▶")
-							.setStyle(ButtonStyle.Secondary)
-							.setDisabled(true)
-					)
-				]
-			}).catch(() => {});
-		});
-
-		return;
-	}
-
-	return interaction.reply({
-		content: "Unknown subcommand.",
-		flags: Flags.EPHEMERAL
-	});
-}
+	},
+};

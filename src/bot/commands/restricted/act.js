@@ -1,45 +1,48 @@
 import { actions, objects } from "../../../database/actStorage.js";
 import { SlashCommandBuilder } from "discord.js";
-import { Flags } from "../../../plugins/flags/message.js";
-import { Precondition } from "../../../plugins/preconditions/precondition.js";
+import { Flags } from "../../../common/flags/message.js";
+import { Precondition } from "../../../common/preconditions/precondition.js";
+import { Category } from "../../../common/command/enums.js";
 
-function doAction(author, user)
+function doAction(author, user) 
 {
-	const action = actions[ Math.floor(Math.random() * actions.length) ];
-	const object = objects[ Math.floor(Math.random() * objects.length) ];
+	const action = actions[Math.floor(Math.random() * actions.length)];
+	const object = objects[Math.floor(Math.random() * objects.length)];
 	return `<@!${author}> ${action} <@!${user}> with ${object}!`;
 }
 
-export const data = new SlashCommandBuilder()
-	.setName("act")
-	.setDescription("Perform a fun action towards another user!")
-	.addUserOption(option =>
+export const data = {
+	name: "act",
+	description: "Perform a fun action towards another user!",
+	category: Category.RESTRICTED,
+	options: new SlashCommandBuilder().addUserOption((option) =>
 		option
 			.setName("user")
 			.setDescription("The user to perform the action on")
-			.setRequired(true)
-	);
-
-
-export async function execute(interaction)
-{
-	if (!Precondition.check.hasFunCommandAccess(interaction))
+			.setRequired(true),
+	),
+	async execute(interaction) 
 	{
-		return Precondition.result.denied(interaction);
-	}
+		if (!Precondition.check.hasFunCommandAccess(interaction)) 
+		{
+			return Precondition.result.denied(interaction);
+		}
 
-	const targetUser = interaction.options.getUser("user");
+		const targetUser = interaction.options.getUser("user");
 
-	if (targetUser.id === interaction.user.id)
-	{
-		await interaction.reply({ content: "You cannot perform this action on yourself!", flags: Flags.EPHEMERAL });
-		return;
-	}
+		if (targetUser.id === interaction.user.id) 
+		{
+			await interaction.reply({
+				content: "You cannot perform this action on yourself!",
+				flags: Flags.EPHEMERAL,
+			});
+			return;
+		}
 
-	const actionMessage = doAction(interaction.user.id, targetUser.id);
-	await interaction.reply({
-		content: actionMessage,
-		allowedMentions: { parse: [] }
-	});
-
-}
+		const actionMessage = doAction(interaction.user.id, targetUser.id);
+		await interaction.reply({
+			content: actionMessage,
+			allowedMentions: { parse: [] },
+		});
+	},
+};

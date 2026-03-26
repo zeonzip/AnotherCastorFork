@@ -1,8 +1,13 @@
 import puppeteer from "puppeteer";
 
-async function renderDiscordMessages(messages)
+/**
+ * Renders a list of Discord-like messages to a PNG buffer using Puppeteer.
+ * @param {Array} messages - Array of message objects.
+ * @returns {Promise<Buffer>} The PNG buffer of the rendered messages.
+ */
+async function renderDiscordMessages(messages) 
 {
-	const browser = await puppeteer.launch({ headless: true, args: [ "--no-sandbox", "--disable-setuid-sandbox" ] });
+	const browser = await puppeteer.launch({ headless: true, args: ["--no-sandbox", "--disable-setuid-sandbox"] });
 	const page = await browser.newPage();
 	await page.setViewport({ width: 800, height: 1024, deviceScaleFactor: 2 });
 
@@ -49,28 +54,18 @@ async function renderDiscordMessages(messages)
           box-sizing: border-box;
           box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
         }
-        .discord-button.primary {
-          background-color: #5865f2;
-        }
-        .discord-button.secondary {
-          background-color: #4f545c;
-        }
-        .discord-button.success {
-          background-color: #3ba55c;
-        }
-        .discord-button.danger {
-          background-color: #ed4245;
-        }
-        .discord-button.link {
-          background-color: #35393eff;
-        }
+        .discord-button.primary { background-color: #5865f2; }
+        .discord-button.secondary { background-color: #4f545c; }
+        .discord-button.success { background-color: #3ba55c; }
+        .discord-button.danger { background-color: #ed4245; }
+        .discord-button.link { background-color: #35393eff; }
       </style>
     </head>
     <body>
       <discord-messages>
   `;
 
-	for (const msg of messages)
+	for (const msg of messages) 
 	{
 		html += `
         <discord-message
@@ -82,9 +77,9 @@ async function renderDiscordMessages(messages)
           ${msg.content || ""}
     `;
 
-		if (msg.embeds && msg.embeds.length > 0)
+		if (msg.embeds && msg.embeds.length > 0) 
 		{
-			for (const embed of msg.embeds)
+			for (const embed of msg.embeds) 
 			{
 				html += `
           <discord-embed slot="embeds" color="${embed.color || "#0099ff"}" author-name="${embed.author?.name || ""}" author-image="${embed.author?.iconURL || ""}" embed-title="${embed.title || ""}" thumbnail="${embed.thumbnail?.url || ""}" image="${embed.image?.url || ""}">
@@ -95,49 +90,36 @@ async function renderDiscordMessages(messages)
 			}
 		}
 
-		if (msg.components && msg.components.length > 0)
+		if (msg.components && msg.components.length > 0) 
 		{
-			for (const row of msg.components)
+			for (const row of msg.components) 
 			{
-				if (row.type === 1)
+				if (row.type === 1) // Action Row
 				{
-					html += `<div class="action-row">`;
-					for (const comp of row.components)
+					html += "<div class=\"action-row\">";
+					for (const comp of row.components) 
 					{
-						if (comp.type === 2)
+						if (comp.type === 2) // Button
 						{
-							let styleClass = "";
-							switch (comp.style)
+							let styleClass = ""; // eslint-disable-line
+							switch (comp.style) 
 							{
-								case 1:
-									styleClass = "primary";
-									break;
-								case 2:
-									styleClass = "secondary";
-									break;
-								case 3:
-									styleClass = "success";
-									break;
-								case 4:
-									styleClass = "danger";
-									break;
-								case 5:
-									styleClass = "link";
-									break;
-								default:
-									styleClass = "secondary";
+							case 1: styleClass = "primary"; break;
+							case 2: styleClass = "secondary"; break;
+							case 3: styleClass = "success"; break;
+							case 4: styleClass = "danger"; break;
+							case 5: styleClass = "link"; break;
+							default: styleClass = "secondary";
 							}
 							html += `<button class="discord-button ${styleClass}">${comp.label || "Button"}</button>`;
 						}
 					}
-					html += `</div>`;
+					html += "</div>";
 				}
 			}
 		}
 
-		html += `
-        </discord-message>
-    `;
+		html += "</discord-message>";
 	}
 
 	html += `
@@ -172,9 +154,9 @@ async function renderDiscordMessages(messages)
  * @param {object} dimensions { width: number, height: number } for the viewport.
  * @returns {Promise<Buffer>} The PNG buffer.
  */
-async function renderRawHtml(htmlContent, dimensions = { width: 1000, height: 500 })
+async function renderRawHtml(htmlContent, dimensions = { width: 1000, height: 500 }) 
 {
-	const browser = await puppeteer.launch({ headless: true, args: [ "--no-sandbox", "--disable-setuid-sandbox" ] });
+	const browser = await puppeteer.launch({ headless: true, args: ["--no-sandbox", "--disable-setuid-sandbox"] });
 	const page = await browser.newPage();
 
 	await page.setViewport({

@@ -1,8 +1,8 @@
 import path from "path";
 import { loadCommandsFromDir } from "./loadCommands.js";
-import { Flags } from "../../../plugins/flags/message.js";
+import { Flags } from "../../../common/flags/message.js";
 import { getTicTacToeButtons } from "../../../tools/commands/tictactoe.js";
-import { basicEmbed } from "../../../plugins/msg/templates/embeds.js";
+import { basicEmbed } from "../../../common/msg/templates/embeds.js";
 
 function handleInteractionError(interaction)
 {
@@ -21,8 +21,10 @@ function handleInteractionError(interaction)
 			flags: Flags.EPHEMERAL
 		});
 	}
-	catch
+	catch (err)
 	{
+		console.warn("Error when handling error with command: ", err);
+		return;
 	}
 }
 
@@ -31,12 +33,13 @@ export default async function handleInteractions({ client })
 	const commandsDir = path.join(process.cwd(), "src", "bot", "commands");
 	const { commands } = await loadCommandsFromDir(commandsDir);
 
-	client.commands = client.commands ?? new Map();
 	for (const c of commands)
 	{
 		const name = c.data.name ?? c.data.toJSON?.().name;
-		if (!name) continue;
-		client.commands.set(name, c.module);
+		if (name) 
+		{
+			client.commands.set(name, c.data);
+		}
 	}
 
 	client.on("interactionCreate", async (interaction) =>
@@ -44,7 +47,10 @@ export default async function handleInteractions({ client })
 		if (interaction.isChatInputCommand())
 		{
 			const cmd = client.commands.get(interaction.commandName);
-			if (!cmd) return;
+			if (!cmd) 
+			{
+				return;
+			}
 
 			try
 			{
@@ -61,6 +67,7 @@ export default async function handleInteractions({ client })
 		if (interaction.isMessageContextMenuCommand())
 		{
 			const cmd = client.commands.get(interaction.commandName);
+			console.log(cmd);
 			if (!cmd)
 			{
 				console.warn(`No module found for context menu command ${interaction.commandName}`);
@@ -85,7 +92,10 @@ export default async function handleInteractions({ client })
 			try
 			{
 				const customId = interaction.customId;
-				if (!customId) return;
+				if (!customId) 
+				{
+					return;
+				}
 
 				if (customId.startsWith("ttt_"))
 				{
@@ -127,8 +137,14 @@ export default async function handleInteractions({ client })
 					{
 						const symbols = Array.from({ length: 9 }, (_, i) =>
 						{
-							if (game.challenger.positions.includes(String(i))) return "❌";
-							if (game.opponent.positions.includes(String(i))) return "⭕";
+							if (game.challenger.positions.includes(String(i))) 
+							{
+								return "❌";
+							}
+							if (game.opponent.positions.includes(String(i))) 
+							{
+								return "⭕";
+							}
 							return "⬜";
 						});
 						return `${symbols[ 0 ]} ${symbols[ 1 ]} ${symbols[ 2 ]}\n${symbols[ 3 ]} ${symbols[ 4 ]} ${symbols[ 5 ]}\n${symbols[ 6 ]} ${symbols[ 7 ]} ${symbols[ 8 ]}`;
@@ -258,7 +274,10 @@ export default async function handleInteractions({ client })
 
 					const choiceMap = { r: "rock", p: "paper", s: "scissors" };
 					const pick = choiceMap[ picked ];
-					if (!pick) return interaction.reply({ content: "Unknown choice.", flags: Flags.EPHEMERAL });
+					if (!pick) 
+					{
+						return interaction.reply({ content: "Unknown choice.", flags: Flags.EPHEMERAL });
+					}
 
 					if (isChallenger && game.challenger.choice)
 					{
@@ -369,18 +388,12 @@ export default async function handleInteractions({ client })
 			catch (err)
 			{
 				console.error("Error handling component interaction:", err);
-				try
+				if (!interaction.replied && !interaction.deferred)
 				{
-					if (!interaction.replied && !interaction.deferred)
-					{
-						await interaction.reply({
-							content: "Error handling button interaction.",
-							flags: Flags.EPHEMERAL
-						});
-					}
-				}
-				catch
-				{
+					await interaction.reply({
+						content: "Error handling button interaction.",
+						flags: Flags.EPHEMERAL
+					});
 				}
 			}
 		}

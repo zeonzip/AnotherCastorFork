@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder } from "discord.js";
 
 export default function createButtons(data, withBuilder = true)
 {
