@@ -56,7 +56,7 @@ client.once("clientReady", async () =>
 	}
 });
 
-const token = isProduction ? process.env.app_token : process.env.dev_app_token;
+const token = isProduction ? process.env.APP_TOKEN : process.env.DEV_APP_TOKEN;
 if (!token)
 {
 	console.error("No bot token found in environment. Set app_token or dev_app_token.");
