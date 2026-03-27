@@ -3,7 +3,7 @@ import { pingComponent } from "../../../../common/msg/templates/components.js";
 import { Flags } from "../../../../common/flags/message.js";
 import { Category } from "../../../../common/command/enums.js";
 
-/** @type {import("../../../../../types").CommandData} */
+/** @type {import("../../../../common/schema.js").CommandData} */
 export const data = {
 	name: "ping",
 	description: "Replies with Pong!",

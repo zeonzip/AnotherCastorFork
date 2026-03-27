@@ -5,7 +5,7 @@ import { basicEmbed } from "../../../common/msg/templates/embeds.js";
 import { client } from "../../../../index.js";
 import { Category } from "../../../common/command/enums.js";
 
-/** @type {import("../../../../types").CommandData} */
+/** @type {import("../../../common/schema.js").CommandData} */
 export const data = {
 	name: "tictactoe",
 	category: Category.VIP,

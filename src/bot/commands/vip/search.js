@@ -8,7 +8,7 @@ function getRandomNumber(min, max)
 	return Math.floor(Math.random() * (max - min) + min);
 }
 
-/** @type {import("../../../../types").CommandData} */
+/** @type {import("../../../common/schema.js").CommandData} */
 export const data = {
 	name: "search",
 	category: Category.VIP,

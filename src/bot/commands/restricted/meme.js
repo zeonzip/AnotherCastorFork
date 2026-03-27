@@ -2,7 +2,7 @@ import { AttachmentBuilder, SlashCommandBuilder } from "discord.js";
 import axios from "axios";
 import { Category } from "../../../common/command/enums.js";
 
-/** @type {import("../../../../types").CommandData} */
+/** @type {import("../../../common/schema.js").CommandData} */
 export const data = {
 	name: "meme",
 	description: "Generate a meme image with top and/or bottom text",

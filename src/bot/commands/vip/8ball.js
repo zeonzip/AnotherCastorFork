@@ -2,7 +2,7 @@ import { SlashCommandBuilder } from "discord.js";
 import { basicEmbed } from "../../../common/msg/templates/embeds.js";
 import { Category } from "../../../common/command/enums.js";
 
-/** @type {import("../../../../types").CommandData} */
+/** @type {import("../../../common/schema.js").CommandData} */
 export const data = {
 	name: "8ball",
 	description: "Ask the magic 8ball a question!",

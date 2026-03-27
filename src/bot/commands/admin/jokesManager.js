@@ -10,7 +10,7 @@ import { addJoke, jokes, removeJoke } from "../../../database/jokes.js";
 import { Flags } from "../../../common/flags/message.js";
 import { Category } from "../../../common/command/enums.js";
 
-/** @type {import("../../../../types").CommandData} */
+/** @type {import("../../../common/schema.js").CommandData} */
 export const data = {
 	name: "managejokes",
 	description: "Manage the dad-joke collection",

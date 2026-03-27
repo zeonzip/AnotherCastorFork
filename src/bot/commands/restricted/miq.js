@@ -118,7 +118,7 @@ function generateQuoteHtml(username, quoteText, avatarURL, quoteFontSize)
 	return htmlContent;
 }
 
-/** @type {import("../../../../types").CommandData} */
+/** @type {import("../../../common/schema.js").CommandData} */
 export const data = {
 	name: "Make it a Quote",
 	category: Category.RESTRICTED,

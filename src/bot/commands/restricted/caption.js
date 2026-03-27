@@ -2,7 +2,7 @@ import { AttachmentBuilder, SlashCommandBuilder } from "discord.js";
 import axios from "axios";
 import { Category } from "../../../common/command/enums.js";
 
-/** @type {import("../../../../types").CommandData} */
+/** @type {import("../../../common/schema.js").CommandData} */
 export const data = {
 	name: "caption",
 	description: "Generate a captioned image (top or bottom)",

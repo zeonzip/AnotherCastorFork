@@ -2,7 +2,7 @@ import { basicEmbed } from "../../../common/msg/templates/embeds.js";
 import { Category } from "../../../common/command/enums.js";
 import { SlashCommandBuilder } from "discord.js";
 
-/** @type {import("../../../../types").CommandData} */
+/** @type {import("../../../common/schema.js").CommandData} */
 export const data = {
 	name: "slots",
 	category: Category.VIP,

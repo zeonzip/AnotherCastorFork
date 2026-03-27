@@ -7,7 +7,7 @@ import { renderDiscordMessages } from "../../../../web/messageRenderer.js";
 import { buttonStyles, buttonTypes } from "../../../../web/buttonTypes.js";
 import { Category } from "../../../../common/command/enums.js";
 
-/** @type {import("../../../../../types").CommandData} */
+/** @type {import("../../../../common/schema.js").CommandData} */
 export const data = {
 	name: "renderpingtest",
 	description: "Replies with pong! as a rendered image.",

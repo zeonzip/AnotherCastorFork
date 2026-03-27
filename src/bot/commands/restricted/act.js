@@ -10,7 +10,7 @@ function doAction(author, user)
 	return `<@!${author}> ${action} <@!${user}> with ${object}!`;
 }
 
-/** @type {import("../../../../types").CommandData} */
+/** @type {import("../../../common/schema.js").CommandData} */
 export const data = {
 	name: "act",
 	description: "Perform a fun action towards another user!",

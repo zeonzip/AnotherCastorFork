@@ -4,7 +4,7 @@ import { fetchGuildLeaderboard } from "../../../database/queries.js";
 import { Flags } from "../../../common/flags/message.js";
 import { Category } from "../../../common/command/enums.js";
 
-/** @type {import("../../../../types").CommandData} */
+/** @type {import("../../../common/schema.js").CommandData} */
 export const data = {
 	name: "leaderboard",
 	category: Category.VIP,

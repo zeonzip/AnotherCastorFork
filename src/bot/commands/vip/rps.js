@@ -6,7 +6,7 @@ import { basicEmbed } from "../../../common/msg/templates/embeds.js";
 import createButtons from "../../../database/ui/buttons.js";
 import { Category } from "../../../common/command/enums.js";
 
-/** @type {import("../../../../types").CommandData} */
+/** @type {import("../../../common/schema.js").CommandData} */
 export const data = {
 	name: "rps",
 	category: Category.VIP,

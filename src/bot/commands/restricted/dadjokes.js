@@ -32,7 +32,7 @@ function getRandomJoke()
 	}
 }
 
-/** @type {import("../../../../types").CommandData} */
+/** @type {import("../../../common/schema.js").CommandData} */
 export const data = {
 	name: "dadjoke",
 	description: "We love dad jokes!",
