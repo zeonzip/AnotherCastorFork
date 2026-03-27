@@ -6,7 +6,7 @@ export default async function registerInteractions({ client, isProduction })
 {
 	const commandsPath = path.join(process.cwd(), "src", "bot", "commands");
 	const { commandsJson } = await loadCommandsFromDir(commandsPath);
-	const token = isProduction ? process.env.app_token : process.env.dev_app_token;
+	const token = isProduction ? process.env.APP_TOKEN : process.env.DEV_APP_TOKEN;
 
 	if (commandsJson.length === 0) 
 	{
