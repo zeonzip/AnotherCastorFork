@@ -1,20 +1,19 @@
 import { basicEmbed } from "../../../common/msg/templates/embeds.js";
-import { Precondition } from "../../../common/preconditions/precondition.js";
 import { Category } from "../../../common/command/enums.js";
 import { SlashCommandBuilder } from "discord.js";
 
+/** @type {import("../../../common/schema.js").CommandData} */
 export const data = {
 	name: "slots",
 	category: Category.VIP,
 	description: "Play a game of slots!",
+	constraints: {
+		isVIP: true
+	},
 	options: new SlashCommandBuilder(),
 	execute(interaction) 
 	{
 		const slotItems = [ "🍇", "🍉", "🍊", "🍎", "🍓", "🍒" ];
-		if (!Precondition.check.isVIPCID(interaction))
-		{
-			return Precondition.result.denied(interaction);
-		}
 
 		let win = false;
 

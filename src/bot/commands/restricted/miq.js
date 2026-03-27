@@ -1,7 +1,6 @@
 import { ApplicationCommandType, AttachmentBuilder, ContextMenuCommandBuilder } from "discord.js";
 import { renderRawHtml } from "../../../web/messageRenderer.js";
 import { Flags } from "../../../common/flags/message.js";
-import { Precondition } from "../../../common/preconditions/precondition.js";
 import { Category } from "../../../common/command/enums.js";
 
 function generateQuoteHtml(username, quoteText, avatarURL, quoteFontSize)
@@ -119,17 +118,16 @@ function generateQuoteHtml(username, quoteText, avatarURL, quoteFontSize)
 	return htmlContent;
 }
 
+/** @type {import("../../../common/schema.js").CommandData} */
 export const data = {
 	name: "Make it a Quote",
 	category: Category.RESTRICTED,
+	constraints: {
+		hasFunCommands: true
+	},
 	options: new ContextMenuCommandBuilder().setType(ApplicationCommandType.Message),
 	async execute(interaction) 
 	{
-        	if (!Precondition.check.hasFunCommandAccess(interaction))
-		{
-			return Precondition.result.denied(interaction);
-		}
-
 		if (!interaction.isMessageContextMenuCommand()) 
 		{
 			return;

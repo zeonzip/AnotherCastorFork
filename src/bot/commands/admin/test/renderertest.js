@@ -5,23 +5,19 @@ import {
 } from "../../../../web/messageBuilder.js";
 import { renderDiscordMessages } from "../../../../web/messageRenderer.js";
 import { buttonStyles, buttonTypes } from "../../../../web/buttonTypes.js";
-import { Precondition } from "../../../../common/preconditions/precondition.js";
 import { Category } from "../../../../common/command/enums.js";
 
-// mr stark, remove this
-
+/** @type {import("../../../../common/schema.js").CommandData} */
 export const data = {
 	name: "renderpingtest",
 	description: "Replies with pong! as a rendered image.",
 	category: Category.ADMIN,
+	constraints: {
+		isAdmin: true
+	},
 	options: new SlashCommandBuilder(),
 	async execute(interaction) 
 	{
-		if (!Precondition.check.isAdmin(interaction)) 
-		{
-			return Precondition.result.denied(interaction);
-		}
-
 		let msg = createSimpleMessage(
 			interaction.client.user.username,
 			interaction.client.user.displayAvatarURL({ format: "png" }),

@@ -1,12 +1,15 @@
 import { AttachmentBuilder, SlashCommandBuilder } from "discord.js";
 import axios from "axios";
-import { Precondition } from "../../../common/preconditions/precondition.js";
 import { Category } from "../../../common/command/enums.js";
 
+/** @type {import("../../../common/schema.js").CommandData} */
 export const data = {
 	name: "speechbubble",
 	description: "Add a speech bubble (top or bottom) to an image",
 	category: Category.RESTRICTED,
+	constraints: {
+		hasFunCommands: true
+	},
 	options: new SlashCommandBuilder()
 		.addAttachmentOption((option) =>
 			option
@@ -26,11 +29,6 @@ export const data = {
 		),
 	async execute(interaction) 
 	{
-		if (!Precondition.check.hasFunCommandAccess(interaction)) 
-		{
-			return Precondition.result.denied(interaction);
-		}
-
 		try 
 		{
 			await interaction.reply({ content: "Generating caption image..." });

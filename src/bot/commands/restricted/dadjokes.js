@@ -1,5 +1,4 @@
 import { SlashCommandBuilder } from "discord.js";
-import { Precondition } from "../../../common/preconditions/precondition.js";
 import fs from "node:fs";
 import path from "node:path";
 import { Category } from "../../../common/command/enums.js";
@@ -33,18 +32,17 @@ function getRandomJoke()
 	}
 }
 
+/** @type {import("../../../common/schema.js").CommandData} */
 export const data = {
 	name: "dadjoke",
 	description: "We love dad jokes!",
 	category: Category.RESTRICTED,
+	constraints: {
+		hasFunCommands: true
+	},
 	options: new SlashCommandBuilder(),
 	async execute(interaction) 
 	{
-		if (!Precondition.check.hasFunCommandAccess(interaction)) 
-		{
-			return Precondition.result.denied(interaction);
-		}
-
 		const joke = getRandomJoke();
 		if (typeof joke === "string") 
 		{

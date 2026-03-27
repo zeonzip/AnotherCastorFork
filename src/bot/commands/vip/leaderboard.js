@@ -2,20 +2,19 @@ import { SlashCommandBuilder } from "discord.js";
 import { basicEmbed } from "../../../common/msg/templates/embeds.js";
 import { fetchGuildLeaderboard } from "../../../database/queries.js";
 import { Flags } from "../../../common/flags/message.js";
-import { Precondition } from "../../../common/preconditions/precondition.js";
 import { Category } from "../../../common/command/enums.js";
 
+/** @type {import("../../../common/schema.js").CommandData} */
 export const data = {
 	name: "leaderboard",
 	category: Category.VIP,
 	description: "Show the leaderboard.",
+	constraints: {
+		isVIP: true
+	},
 	options: new SlashCommandBuilder(),
 	async execute(interaction) 
 	{
-		if (!Precondition.check.isVIPCID(interaction)) 
-		{
-			return Precondition.result.denied(interaction);
-		}
 
 		try 
 		{

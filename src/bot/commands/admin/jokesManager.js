@@ -6,15 +6,18 @@ import {
 	EmbedBuilder,
 	SlashCommandBuilder,
 } from "discord.js";
-import { Precondition } from "../../../common/preconditions/precondition.js";
 import { addJoke, jokes, removeJoke } from "../../../database/jokes.js";
 import { Flags } from "../../../common/flags/message.js";
 import { Category } from "../../../common/command/enums.js";
 
+/** @type {import("../../../common/schema.js").CommandData} */
 export const data = {
 	name: "managejokes",
 	description: "Manage the dad-joke collection",
 	category: Category.ADMIN,
+	constraints: {
+		isSrMod: true
+	},
 	options: new SlashCommandBuilder()
 		.addSubcommand((subcommand) =>
 			subcommand
@@ -56,11 +59,6 @@ export const data = {
 		),
 	async execute(interaction) 
 	{
-		if (!Precondition.check.isSrMod(interaction)) 
-		{
-			return Precondition.result.denied(interaction);
-		}
-
 		const subcommand = interaction.options.getSubcommand();
 
 		if (subcommand === "add") 

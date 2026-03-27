@@ -1,12 +1,15 @@
 import { SlashCommandBuilder } from "discord.js";
 import { basicEmbed } from "../../../common/msg/templates/embeds.js";
-import { Precondition } from "../../../common/preconditions/precondition.js";
 import { Category } from "../../../common/command/enums.js";
 
+/** @type {import("../../../common/schema.js").CommandData} */
 export const data = {
 	name: "coinflip",
 	description: "Flip a coin and guess the side!",
 	category: Category.VIP,
+	constraints: {
+		isVIP: true
+	},
 	options: new SlashCommandBuilder().addStringOption((option) =>
 		option
 			.setName("side")
@@ -19,11 +22,6 @@ export const data = {
 	),
 	execute(interaction) 
 	{
-		if (!Precondition.check.isVIPCID(interaction)) 
-		{
-			return Precondition.result.denied(interaction);
-		}
-
 		const n = Math.floor(Math.random() * 2) === 0 ? "heads" : "tails";
 
 		const guess = interaction.options.getString("side");

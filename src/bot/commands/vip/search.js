@@ -1,7 +1,6 @@
 import { SlashCommandBuilder } from "discord.js";
 import { fetchOrCreateUser, updateUser } from "../../../database/queries.js";
 import { Flags } from "../../../common/flags/message.js";
-import { Precondition } from "../../../common/preconditions/precondition.js";
 import { Category } from "../../../common/command/enums.js";
 
 function getRandomNumber(min, max)
@@ -9,10 +8,14 @@ function getRandomNumber(min, max)
 	return Math.floor(Math.random() * (max - min) + min);
 }
 
+/** @type {import("../../../common/schema.js").CommandData} */
 export const data = {
 	name: "search",
 	category: Category.VIP,
 	description: "Search your surroundings for some coins!",
+	constraints: {
+		isVIP: true
+	},
 	options: new SlashCommandBuilder(),
 	async execute(interaction) 
 	{
@@ -28,11 +31,6 @@ export const data = {
 			"🛏️ You lift the mattress and, lo and behold, **{{amount}} coins** were hiding there all along!",
 			"🗑️ You reluctantly check the trash can... and somehow, you find **{{amount}} coins**. Gross, but worth it!"
 		];
-
-		if (!Precondition.check.isVIPCID(interaction))
-		{
-			return Precondition.result.denied(interaction);
-		}
 
 		try
 		{

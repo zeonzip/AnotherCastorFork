@@ -3,6 +3,7 @@ import { Flags } from "../../common/flags/message.js";
 import { Category } from "../../common/command/enums.js";
 
 // mr stark? Is this really coming soon?
+/** @type {import("../../common/schema.js").CommandData} */
 export const data = {
 	name: "help",
 	category: Category.GENERIC,

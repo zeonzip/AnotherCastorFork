@@ -4,13 +4,16 @@ import { addRpsGameData, getUniqueRpsId } from "../../../database/games/rps.js";
 import { client } from "../../../../index.js";
 import { basicEmbed } from "../../../common/msg/templates/embeds.js";
 import createButtons from "../../../database/ui/buttons.js";
-import { Precondition } from "../../../common/preconditions/precondition.js";
 import { Category } from "../../../common/command/enums.js";
 
+/** @type {import("../../../common/schema.js").CommandData} */
 export const data = {
 	name: "rps",
 	category: Category.VIP,
 	description: "Play a game of rock-paper-scissors!",
+	constraints: {
+		isVIP: true
+	},
 	options: new SlashCommandBuilder().addUserOption((option) =>
 		option
 			.setName("member")
@@ -20,11 +23,6 @@ export const data = {
 	),
 	execute(interaction) 
 	{
-		if (!Precondition.check.isVIPCID(interaction)) 
-		{
-			return Precondition.result.denied(interaction);
-		}
-
 		const selectedOpponent = interaction.options.getUser("member");
 
 		const opponentId = selectedOpponent

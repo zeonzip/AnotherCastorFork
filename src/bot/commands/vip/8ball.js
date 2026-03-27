@@ -1,12 +1,15 @@
 import { SlashCommandBuilder } from "discord.js";
 import { basicEmbed } from "../../../common/msg/templates/embeds.js";
-import { Precondition } from "../../../common/preconditions/precondition.js";
 import { Category } from "../../../common/command/enums.js";
 
+/** @type {import("../../../common/schema.js").CommandData} */
 export const data = {
 	name: "8ball",
 	description: "Ask the magic 8ball a question!",
 	category: Category.VIP,
+	constraints: {
+		isVIP: true
+	},
 	options: new SlashCommandBuilder().addStringOption((option) =>
 		option
 			.setName("question")
@@ -44,11 +47,6 @@ export const data = {
 			"Not my problem.",
 			"Ask someone else.",
 		];
-
-		if (!Precondition.check.isVIPCID(interaction)) 
-		{
-			return Precondition.result.denied(interaction);
-		}
 
 		try 
 		{

@@ -1,12 +1,15 @@
 import { SlashCommandBuilder } from "discord.js";
 import { basicEmbed } from "../../../common/msg/templates/embeds.js";
-import { Precondition } from "../../../common/preconditions/precondition.js";
 import { Category } from "../../../common/command/enums.js";
 
+/** @type {import("../../../common/schema.js").CommandData} */
 export const data = {
 	name: "dice",
 	category: Category.VIP,
 	description: "Roll a dice and guess the number!",
+	constraints: {
+		isVIP: true
+	},
 	options: new SlashCommandBuilder().addIntegerOption((option) =>
 		option
 			.setName("guess")
@@ -17,11 +20,6 @@ export const data = {
 	),
 	execute(interaction) 
 	{
-		if (!Precondition.check.isVIPCID(interaction)) 
-		{
-			return Precondition.result.denied(interaction);
-		}
-
 		const n = Math.floor(Math.random() * 6) + 1;
 
 		const guess = interaction.options.getInteger("guess");

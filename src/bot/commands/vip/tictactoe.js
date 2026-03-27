@@ -1,15 +1,18 @@
 import { SlashCommandBuilder } from "discord.js";
-import { addTicTacToeGameData, getTicTacToeButtons, getUniqueTicTacToeId } from "../../../tools/commands/tictactoe.js";
+import { addTicTacToeGameData, getTicTacToeButtons, getUniqueTicTacToeId } from "../../../utils/interactions/tictactoe.js";
 import { Flags } from "../../../common/flags/message.js";
 import { basicEmbed } from "../../../common/msg/templates/embeds.js";
 import { client } from "../../../../index.js";
-import { Precondition } from "../../../common/preconditions/precondition.js";
 import { Category } from "../../../common/command/enums.js";
 
+/** @type {import("../../../common/schema.js").CommandData} */
 export const data = {
 	name: "tictactoe",
 	category: Category.VIP,
 	description: "Play a game of tic-tac-toe against another user!",
+	constraints: {
+		isVIP: true
+	},
 	options: new SlashCommandBuilder()
 		.addUserOption((option) =>
 			option
@@ -19,11 +22,6 @@ export const data = {
 		),
 	execute(interaction) 
 	{
-		if (!Precondition.check.isVIPCID(interaction))
-		{
-			return Precondition.result.denied(interaction);
-		}
-
 		const selectedOpponent = interaction.options.getUser("member");
 
 		const opponentId = selectedOpponent
